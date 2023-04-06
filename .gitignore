@@ -35,3 +35,34 @@ out/
 
 ### VS Code ###
 .vscode/
+
+# Gradle files
+.gradle/
+build/
+
+# IntelliJ IDEA files
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# Eclipse files
+.classpath
+.project
+.settings/
+
+# Compiled files
+bin/
+out/
+build/
+
+# Local configuration files
+application.properties
+application.yml
+application-dev.properties
+application-prod.properties
+
+# Miscellaneous
+.DS_Store
+Thumbs.db
+
