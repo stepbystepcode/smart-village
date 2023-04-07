@@ -7,9 +7,7 @@ import org.bson.Document
 import org.springframework.context.annotation.Bean
 import org.springframework.core.env.Environment
 import org.springframework.data.mongodb.core.MongoTemplate
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 
 @Configuration
@@ -22,12 +20,11 @@ class MongoConfig(private val environment: Environment) {
     }
 
     @RestController
-    @RequestMapping("/seed")
-    class SeedController(val mongoTemplate: MongoTemplate) {
-        @GetMapping
-        fun getSeed(): List<Document> {
+    class DataController(val mongoTemplate: MongoTemplate) {
+        @GetMapping("/api/data/{collection}")
+        fun getData(@PathVariable collection: String): List<Document>{
             val query = Document()
-            return mongoTemplate.getCollection("seed").find(query).toList()
+            return mongoTemplate.getCollection(collection).find(query).toList()
         }
     }
 }
