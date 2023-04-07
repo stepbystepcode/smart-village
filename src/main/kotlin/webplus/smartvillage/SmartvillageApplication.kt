@@ -5,6 +5,7 @@ import org.springframework.boot.runApplication
 
 
 //def
+
 @SpringBootApplication
 class SmartVillageApplication
 
