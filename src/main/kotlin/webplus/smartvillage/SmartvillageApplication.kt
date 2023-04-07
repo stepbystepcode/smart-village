@@ -3,7 +3,7 @@ package webplus.smartvillage
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
-
+//abc
 
 @SpringBootApplication
 class SmartVillageApplication
