@@ -4,7 +4,6 @@ package webplus.smartvillage
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
-import webplus.smartvillage.JwtInterceptor.Companion.createJwt
 import java.util.*
 
 @RestController
@@ -15,7 +14,7 @@ class LoginController {
         // 验证用户名和密码
         if (isValidUser(credentials.username, credentials.password)) {
             // 生成 JWT
-            return createJwt(JwtInterceptor(),credentials.username)
+            return JwtInterceptor().createJwt(credentials.username)
         } else {
             throw Exception("无效的凭据")
         }

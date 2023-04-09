@@ -5,9 +5,10 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 
 @Configuration
-class AppConfig(private val jwtInterceptor: JwtInterceptor) : WebMvcConfigurer {
+class AppConfig : WebMvcConfigurer {
 
     override fun addInterceptors(registry: InterceptorRegistry) {
-        registry.addInterceptor(jwtInterceptor)
+        registry.addInterceptor(JwtInterceptor())
+            .addPathPatterns("/api/data/**")
     }
 }
