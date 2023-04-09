@@ -1,17 +1,17 @@
 package webplus.smartvillage
+
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
-import org.springframework.web.servlet.HandlerInterceptor
 import io.jsonwebtoken.SignatureAlgorithm
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
+import org.springframework.web.servlet.HandlerInterceptor
 import java.util.*
 
+
 class JwtInterceptor : HandlerInterceptor {
-
-
+    private val secretKey=""
     fun createJwt(username: String): String {
-
         val claims: Claims = Jwts.claims().setSubject(username)
         val nowMillis = System.currentTimeMillis()
         val now = Date(nowMillis)
@@ -31,7 +31,7 @@ class JwtInterceptor : HandlerInterceptor {
         val token = request.getHeader("Authorization")?.replace("Bearer ", "")
         if (token != null) {
             try {
-                Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token)
+                Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token)
                 return true
             } catch (e: Exception) {
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid token")
