@@ -1,20 +1,21 @@
 package webplus.smartvillage
 
 
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 import java.util.*
 
 @RestController
-class LoginController {
+class LoginController(@Value("\${myapp.property}") val myProperty: String) {
 
     @PostMapping("/api/login")
     fun login(@RequestBody credentials: Credentials): String {
         // 验证用户名和密码
         if (isValidUser(credentials.username, credentials.password)) {
             // 生成 JWT
-            return JwtInterceptor().createJwt(credentials.username)
+            return JwtInterceptor(myProperty).createJwt(credentials.username)
         } else {
             throw Exception("无效的凭据")
         }

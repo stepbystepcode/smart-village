@@ -5,13 +5,13 @@ import io.jsonwebtoken.Jwts
 import io.jsonwebtoken.SignatureAlgorithm
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.web.servlet.HandlerInterceptor
 import java.util.*
 
-
-class JwtInterceptor : HandlerInterceptor {
-    private val secretKey=""
+class JwtInterceptor(@Value("\${myapp.property}") val myProperty: String): HandlerInterceptor {
     fun createJwt(username: String): String {
+
         val claims: Claims = Jwts.claims().setSubject(username)
         val nowMillis = System.currentTimeMillis()
         val now = Date(nowMillis)
@@ -21,7 +21,7 @@ class JwtInterceptor : HandlerInterceptor {
         claims["iat"] = now
         return Jwts.builder()
             .setClaims(claims)
-            .signWith(SignatureAlgorithm.HS256, secretKey)
+            .signWith(SignatureAlgorithm.HS256, myProperty)
             .compact()
     }
 
@@ -31,7 +31,7 @@ class JwtInterceptor : HandlerInterceptor {
         val token = request.getHeader("Authorization")?.replace("Bearer ", "")
         if (token != null) {
             try {
-                Jwts.parserBuilder().setSigningKey(secretKey).build().parseClaimsJws(token)
+                Jwts.parserBuilder().setSigningKey(myProperty).build().parseClaimsJws(token)
                 return true
             } catch (e: Exception) {
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid token")
