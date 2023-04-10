@@ -20,8 +20,15 @@ import org.springframework.web.bind.annotation.PathVariable
 class ShopController(val mongoTemplate: MongoTemplate) {
     @CrossOrigin("*")
     @GetMapping("/api/user/history/{id}")
-    fun getData(@PathVariable id: String): List<Document>{
+    fun getHistory(@PathVariable id: String): List<Document>{
         val user = mongoTemplate.getCollection("user").find(eq("_id",ObjectId(id))).toList()
         return user[0]["history"] as List<Document>
+    }
+
+    @CrossOrigin("*")
+    @GetMapping("/api/user/favourite/{id}")
+    fun getFavourite(@PathVariable id: String): List<Document>{
+        val user = mongoTemplate.getCollection("user").find(eq("_id",ObjectId(id))).toList()
+        return user[0]["favourite"] as List<Document>
     }
 }
