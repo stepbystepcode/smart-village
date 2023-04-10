@@ -1,6 +1,7 @@
 package webplus.smartvillage
 
 
+import jakarta.servlet.http.HttpServletRequest
 import org.bson.Document
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.data.mongodb.core.MongoTemplate
@@ -10,11 +11,20 @@ import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RestController
 import java.util.*
 import org.springframework.security.crypto.password.PasswordEncoder
+import org.springframework.stereotype.Repository
+import org.springframework.web.bind.annotation.CrossOrigin
 
 @RestController
 class UserController(@Value("\${myapp.property}") val myProperty: String,private val passwordEncoder: PasswordEncoder,val mongoTemplate: MongoTemplate) {
 
 
+    @CrossOrigin("*")
+    @PostMapping("/api/user")
+    fun getInfo(request: HttpServletRequest):String {
+        val token = request.getHeader("Authorization")?.replace("Bearer ", "")
+        return "abc"
+    }
+    @CrossOrigin("*")
     @PostMapping("/api/login")
     fun login(@RequestBody credentials: Credentials): String {
         // 验证用户名和密码
@@ -26,8 +36,9 @@ class UserController(@Value("\${myapp.property}") val myProperty: String,private
         }
     }
 
+    @CrossOrigin("*")
     @PostMapping("/api/signup")
-    fun signUp(@RequestBody signUpRequest: SignUpRequest): ResponseEntity<*> {
+    fun signUp(@RequestBody signUpRequest: User): ResponseEntity<*> {
 
         // Check if user already exists
         val usernameQuery = Document("username", signUpRequest.username)
@@ -54,7 +65,7 @@ class UserController(@Value("\${myapp.property}") val myProperty: String,private
 }
 
 data class Credentials(val username: String, val password: String)
-data class SignUpRequest(
+data class User(
     val username: String,
     var password: String,
     val phone: String
