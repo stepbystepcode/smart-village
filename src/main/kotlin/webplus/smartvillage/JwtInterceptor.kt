@@ -15,9 +15,9 @@ class JwtInterceptor(@Value("\${myapp.property}") val myProperty: String): Handl
         val claims: Claims = Jwts.claims().setSubject(username)
         val nowMillis = System.currentTimeMillis()
         val now = Date(nowMillis)
-        val expMillis = nowMillis + 1000 * 60 * 60 * 24 // 1 day
-        val exp = Date(expMillis)
-        claims["exp"] = exp
+        //val expMillis = nowMillis + 1000 * 60 * 60 * 24 // 1 day
+        //val exp = Date(expMillis)
+        //claims["exp"] = exp
         claims["iat"] = now
         return Jwts.builder()
             .setClaims(claims)
