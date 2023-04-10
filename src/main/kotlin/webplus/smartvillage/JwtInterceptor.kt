@@ -2,7 +2,7 @@ package webplus.smartvillage
 
 import io.jsonwebtoken.Claims
 import io.jsonwebtoken.Jwts
-import io.jsonwebtoken.SignatureAlgorithm
+import io.jsonwebtoken.security.Keys
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import org.springframework.beans.factory.annotation.Value
@@ -19,9 +19,11 @@ class JwtInterceptor(@Value("\${myapp.property}") val myProperty: String): Handl
         //val exp = Date(expMillis)
         //claims["exp"] = exp
         claims["iat"] = now
+        val keyBytes = myProperty.toByteArray(Charsets.UTF_8)
+        val key = Keys.hmacShaKeyFor(keyBytes)
         return Jwts.builder()
             .setClaims(claims)
-            .signWith(SignatureAlgorithm.HS256, myProperty)
+            .signWith(key)
             .compact()
     }
 
@@ -31,7 +33,12 @@ class JwtInterceptor(@Value("\${myapp.property}") val myProperty: String): Handl
         val token = request.getHeader("Authorization")?.replace("Bearer ", "")
         if (token != null) {
             try {
-                Jwts.parserBuilder().setSigningKey(myProperty).build().parseClaimsJws(token)
+                val keyBytes = myProperty.toByteArray(Charsets.UTF_8)
+                val key = Keys.hmacShaKeyFor(keyBytes)
+                Jwts.parserBuilder()
+                    .setSigningKey(key)
+                    .build()
+                    .parseClaimsJws(token)
                 return true
             } catch (e: Exception) {
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid token")
