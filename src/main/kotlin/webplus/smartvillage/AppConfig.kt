@@ -15,6 +15,7 @@ class AppConfig(@Value("\${myapp.property}") val myProperty: String) : WebMvcCon
         val jwtInterceptor = JwtInterceptor(myProperty) // create a new instance of JwtInterceptor
         registry.addInterceptor(jwtInterceptor)
             .addPathPatterns("/api/data/**")
+            .addPathPatterns("/api/user/**")
     }
 }
 @Configuration
