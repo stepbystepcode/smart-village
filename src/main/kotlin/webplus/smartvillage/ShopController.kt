@@ -25,24 +25,13 @@ class ShopController(val mongoTemplate: MongoTemplate) {
     }
     fun addItem(id: Number, username: String, type: String) {
         val filter = eq("username", username)
-        val options = FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
+        val update = Updates.push("history", id)
+        val options = FindOneAndUpdateOptions()
+            .returnDocument(ReturnDocument.AFTER)
         val collection = mongoTemplate.getCollection("user")
-        val result: Document? = collection.find(filter).first()
-
+        val result: Document? = collection.findOneAndUpdate(filter, update, options)
         if (result != null) {
-            val idArray = result[type] as ArrayList<Number>
-            //if () {
-                // 如果数组中已经包含该 id，则先从数组中删除
-            //}
-            // 将新的id添加到数组末尾
-            idArray.add(id)
-
-            // 执行更新操作
-            val update = Updates.set(type, idArray)
-            val updatedResult: Document? = collection.findOneAndUpdate(filter, update, options)
-            if (updatedResult != null) {
-                println(updatedResult.toJson())
-            }
+            println(result.toJson())
         }
     }
 }
