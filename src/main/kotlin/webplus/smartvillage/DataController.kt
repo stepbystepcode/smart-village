@@ -38,7 +38,7 @@ class DataController(val mongoTemplate: MongoTemplate,@Value("\${myapp.property}
             // 根据类型选择调用的方法
             when (type) {
                 "history" -> shopController.addHistory(goodId, username)
-                "favorite" -> shopController.addFavorite(goodId, username)
+                "favourite" -> shopController.addFavourite(goodId, username)
                 else -> throw IllegalArgumentException("Invalid request type: $type")
             }
             //调用 addHistory 方法

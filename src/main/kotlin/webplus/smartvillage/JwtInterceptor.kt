@@ -37,8 +37,7 @@ class JwtInterceptor(@Value("\${myapp.property}") val myProperty: String): Handl
                     .setSigningKey(key)
                     .build()
                     .parseClaimsJws(token)
-                println(res.body)
-                return res as String
+                return res.body["sub"] as String
 
         }
         return "error"
