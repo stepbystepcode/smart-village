@@ -15,34 +15,19 @@ class DataController(val mongoTemplate: MongoTemplate,@Value("\${myapp.property}
         val query = Document()
         return mongoTemplate.getCollection(collection).find(query).toList()
     }
-//    @GetMapping("/{id}")
-//    fun getOne(@PathVariable collection: String,@PathVariable id: Number): List<Document>{
-//        val query = Document("id",id)
-//        return mongoTemplate.getCollection(collection).find(query).toList()
-//    }
     @GetMapping("/{goodId}")
     fun getOne(
         @PathVariable collection: String,
         @PathVariable goodId: Number,
-        @RequestParam(required = false, defaultValue = "history") type: String,//add
+        @RequestParam(required = false, defaultValue = "history") type: String,
         request: HttpServletRequest
     ): List<Document> {
         if (request.getHeader("Authorization") != null) {
             val token = request.getHeader("Authorization")?.replace("Bearer ", "")
             val interceptor = JwtInterceptor(myProperty)
             val username = interceptor.tokenToName(token)
-
-            //创建 ShopController 实例
             val shopController = ShopController(mongoTemplate )
-
-            // 根据类型选择调用的方法
-            when (type) {
-                "history" -> shopController.addHistory(goodId, username)
-                "favourite" -> shopController.addFavourite(goodId, username)
-                else -> throw IllegalArgumentException("Invalid request type: $type")
-            }
-            //调用 addHistory 方法
-            //shopController.addHistory(good, username)
+            shopController.addItem(goodId,username,type)
         }
         val query = Document("id", goodId)
         return mongoTemplate.getCollection(collection).find(query).toList()

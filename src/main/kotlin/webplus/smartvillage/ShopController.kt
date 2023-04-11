@@ -18,55 +18,31 @@ import org.springframework.web.bind.annotation.*
 @RestController
 class ShopController(val mongoTemplate: MongoTemplate) {
     @CrossOrigin("*")
-    @GetMapping("/api/user/history/{id}")
-    fun getHistory(@PathVariable id: String): List<Document> {
+    @GetMapping("/api/user/item/{id}")
+    fun getItem(@PathVariable id: String,@RequestParam(required = false, defaultValue = "history") type: String): List<Document> {
         val user = mongoTemplate.getCollection("user").find(eq("_id", ObjectId(id))).toList()
-        return user[0]["history"] as List<Document>
+        return user[0][type] as List<Document>
     }
+    fun addItem(id: Number, username: String, type: String) {
+        val filter = eq("username", username)
+        val options = FindOneAndUpdateOptions().returnDocument(ReturnDocument.AFTER)
+        val collection = mongoTemplate.getCollection("user")
+        val result: Document? = collection.find(filter).first()
 
-        fun addHistory(id:Number, username: String){
-            val filter = eq("username", username)
-            val update = Updates.push("history", id.toString())
-            val options = FindOneAndUpdateOptions()
-                .returnDocument(ReturnDocument.AFTER)
-            val collection = mongoTemplate.getCollection("user")
-            val result: Document? = collection.findOneAndUpdate(filter, update, options)
-            if (result != null) {
-                println(result.toJson())
+        if (result != null) {
+            val idArray = result[type] as ArrayList<Number>
+            //if () {
+                // 如果数组中已经包含该 id，则先从数组中删除
+            //}
+            // 将新的id添加到数组末尾
+            idArray.add(id)
+
+            // 执行更新操作
+            val update = Updates.set(type, idArray)
+            val updatedResult: Document? = collection.findOneAndUpdate(filter, update, options)
+            if (updatedResult != null) {
+                println(updatedResult.toJson())
             }
         }
-    @CrossOrigin("*")
-    @GetMapping("/api/user/favourite/{id}")
-    fun getFavourite(@PathVariable id: String): List<Document> {
-        val user = mongoTemplate.getCollection("user").find(eq("_id", ObjectId(id))).toList()
-        return user[0]["favourite"] as List<Document>
     }
-    fun addFavourite(id:Number, username: String){
-        val filter = eq("username", username)
-        val update = Updates.push("favourite", id.toString())
-        val options = FindOneAndUpdateOptions()
-            .returnDocument(ReturnDocument.AFTER)
-        val collection = mongoTemplate.getCollection("user")
-        val result: Document? = collection.findOneAndUpdate(filter, update, options)
-        if (result != null) {
-            println(result.toJson())
-        }
-    }
-
-//    @CrossOrigin("*")
-//    @PostMapping("/api/user/history/{good}")
-//    fun addHistory(@PathVariable good: Number,username: String) {
-//        val query = Document("username", username)
-//        val update = Document("\$push", Document("history", good))
-//        mongoTemplate.getCollection("user").updateOne(query, update)
-//    }
-    @CrossOrigin("*")
-    @PostMapping("/api/user/favourite/{good}")
-    fun addFavorite(@PathVariable good: Number, username: String) {
-        val query = Document("username", username)
-        val update = Document("\$push", Document("favorite", good))
-        mongoTemplate.getCollection("user").updateOne(query, update)
-    }
-
-
 }
