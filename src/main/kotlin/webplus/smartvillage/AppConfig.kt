@@ -14,8 +14,7 @@ class AppConfig(@Value("\${myapp.property}") val myProperty: String) : WebMvcCon
     override fun addInterceptors(registry: InterceptorRegistry) {
         val jwtInterceptor = JwtInterceptor(myProperty) // create a new instance of JwtInterceptor
         registry.addInterceptor(jwtInterceptor)
-            .addPathPatterns("/api/data/**")
-            .addPathPatterns("/api/user/**")
+        .addPathPatterns("/api/data/**")
     }
 }
 @Configuration
