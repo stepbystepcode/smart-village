@@ -1,28 +1,27 @@
 package webplus.smartvillage
 
-
-import jakarta.servlet.http.HttpServletRequest
 import org.bson.Document
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RestController
 import java.util.*
 import org.springframework.security.crypto.password.PasswordEncoder
-import org.springframework.stereotype.Repository
-import org.springframework.web.bind.annotation.CrossOrigin
+import org.springframework.web.bind.annotation.*
 
 @RestController
 class UserController(@Value("\${myapp.property}") val myProperty: String,private val passwordEncoder: PasswordEncoder,val mongoTemplate: MongoTemplate) {
 
 
     @CrossOrigin("*")
-    @PostMapping("/api/user")
-    fun getInfo(request: HttpServletRequest):String {
-        val token = request.getHeader("Authorization")?.replace("Bearer ", "")
-        return "abc"
+    @PostMapping("/api/user/{username}")
+    fun getInfo(@PathVariable username: String) :Document{
+        val query = Document("username",username)
+        val formData=mongoTemplate.getCollection("user").find(query).toList()[0]
+        val formDataWithoutPassword = Document().apply {
+            putAll(formData)
+            remove("password")
+        }
+        return formDataWithoutPassword
     }
     @CrossOrigin("*")
     @PostMapping("/api/login")

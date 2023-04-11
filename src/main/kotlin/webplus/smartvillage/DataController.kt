@@ -7,16 +7,20 @@ import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.web.bind.annotation.*
 
 @RestController
-class DataController(val mongoTemplate: MongoTemplate, @Value("\${myapp.property}") val myProperty: String) {
-    @CrossOrigin("*")
-    @GetMapping("/api/data/{collection}")
-    fun getData(@PathVariable collection: String): List<Document> {
+@CrossOrigin("*")
+@RequestMapping("/api/data/{collection}")
+class DataController(val mongoTemplate: MongoTemplate) {
+    @GetMapping("/")
+    fun getData(@PathVariable collection: String): List<Document>{
         val query = Document()
         return mongoTemplate.getCollection(collection).find(query).toList()
     }
-
-    @CrossOrigin("*")
-    @PostMapping("/api/user/{collection}/{good}")
+    @GetMapping("/{id}")
+    fun getOne(@PathVariable collection: String,@PathVariable id: Number): List<Document>{
+        val query = Document("id",id)
+        return mongoTemplate.getCollection(collection).find(query).toList()
+    }
+    @GetMapping("/{id}/d")
     fun postOne(
         @PathVariable collection: String,
         @PathVariable good: Number,
@@ -43,5 +47,4 @@ class DataController(val mongoTemplate: MongoTemplate, @Value("\${myapp.property
         val query = Document("id", good)
         return mongoTemplate.getCollection(collection).find(query).toList()
     }
-
 }
