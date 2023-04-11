@@ -15,9 +15,9 @@ import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.web.bind.annotation.*
 
 
+@CrossOrigin("*")
 @RestController
 class ShopController(val mongoTemplate: MongoTemplate) {
-    @CrossOrigin("*")
     @GetMapping("/api/user/item/{id}")
     fun getItem(@PathVariable id: String,@RequestParam(required = false, defaultValue = "history") type: String): List<Document> {
         val user = mongoTemplate.getCollection("user").find(eq("_id", ObjectId(id))).toList()
