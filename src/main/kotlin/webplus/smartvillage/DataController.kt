@@ -7,18 +7,19 @@ import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@CrossOrigin("*")
 @RequestMapping("/api/data/{collection}")
 class DataController(val mongoTemplate: MongoTemplate,@Value("\${myapp.property}") val myProperty: String) {
+    @CrossOrigin("*")
     @GetMapping("/")
     fun getData(@PathVariable collection: String): List<Document>{
         val query = Document()
         return mongoTemplate.getCollection(collection).find(query).toList()
     }
+    @CrossOrigin("*")
     @GetMapping("/{goodId}")
     fun getOne(
         @PathVariable collection: String,
-        @PathVariable goodId: Number,
+        @PathVariable goodId: Long,
         @RequestParam(required = false, defaultValue = "history") type: String,
         request: HttpServletRequest
     ): List<Document> {
