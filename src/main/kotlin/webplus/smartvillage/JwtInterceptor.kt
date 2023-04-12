@@ -27,17 +27,16 @@ class JwtInterceptor(@Value("\${myapp.property}") val myProperty: String): Handl
             .compact()
     }
 
-    fun tokenToName(token:String? /*request: HttpServletRequest, response: HttpServletResponse, handler: Any*/): String {
-        //val token = request.getHeader("Authorization")?.replace("Bearer ", "")
+    fun tokenToName(token:String?): String {
         if (token != null) {
 
-                val keyBytes = myProperty.toByteArray(Charsets.UTF_8)
-                val key = Keys.hmacShaKeyFor(keyBytes)
-                val res = Jwts.parserBuilder()
-                    .setSigningKey(key)
-                    .build()
-                    .parseClaimsJws(token)
-                return res.body["sub"] as String
+            val keyBytes = myProperty.toByteArray(Charsets.UTF_8)
+            val key = Keys.hmacShaKeyFor(keyBytes)
+            val res = Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+            return res.body["sub"] as String
 
         }
         return "error"

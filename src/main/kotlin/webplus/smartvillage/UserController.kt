@@ -9,11 +9,10 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@CrossOrigin("*")
 @RequestMapping("/api")
 class UserController(@Value("\${myapp.property}") val myProperty: String,private val passwordEncoder: PasswordEncoder,val mongoTemplate: MongoTemplate) {
 
-
+    @CrossOrigin("*")
     @PostMapping("/user/{username}")
     fun getInfo(@PathVariable username: String) :Document{
         val query = Document("username",username)
@@ -24,6 +23,7 @@ class UserController(@Value("\${myapp.property}") val myProperty: String,private
         }
         return formDataWithoutPassword
     }
+    @CrossOrigin("*")
     @PostMapping("/login")
     fun login(@RequestBody credentials: Credentials): String {
         // 验证用户名和密码
@@ -35,6 +35,7 @@ class UserController(@Value("\${myapp.property}") val myProperty: String,private
         }
     }
 
+    @CrossOrigin("*")
     @PostMapping("/signup")
     fun signUp(@RequestBody signUpRequest: User): ResponseEntity<*> {
 
