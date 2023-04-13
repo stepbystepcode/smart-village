@@ -10,8 +10,9 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api")
-class UserController(@Value("\${myapp.property}") val myProperty: String,private val passwordEncoder: PasswordEncoder,val mongoTemplate: MongoTemplate) {
-
+class UserController(private val passwordEncoder: PasswordEncoder,val mongoTemplate: MongoTemplate) {
+    @Value("\${myapp.property}")
+    private lateinit var myProperty:String
     @CrossOrigin("*")
     @PostMapping("/user/{username}")
     fun getInfo(@PathVariable username: String) :Document{

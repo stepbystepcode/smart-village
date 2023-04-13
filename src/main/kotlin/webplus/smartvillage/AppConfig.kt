@@ -11,12 +11,14 @@ import org.springframework.web.servlet.config.annotation.InterceptorRegistry
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
 
 @Configuration
-class AppConfig(@Value("\${myapp.property}") val myProperty: String) : WebMvcConfigurer {
+class AppConfig() : WebMvcConfigurer {
+    @Value("\${myapp.property}")
+    private lateinit var myProperty:String
 
     override fun addInterceptors(registry: InterceptorRegistry) {
         val jwtInterceptor = JwtInterceptor(myProperty) // create a new instance of JwtInterceptor
         registry.addInterceptor(jwtInterceptor)
-            .addPathPatterns("/api/data/**")
+            .addPathPatterns("/api/user/ite/**")
     }
 }
 @Configuration

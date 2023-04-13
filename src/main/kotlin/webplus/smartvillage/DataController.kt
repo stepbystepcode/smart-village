@@ -8,7 +8,10 @@ import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/data/{collection}")
-class DataController(val mongoTemplate: MongoTemplate,@Value("\${myapp.property}") val myProperty: String) {
+class DataController(val mongoTemplate: MongoTemplate) {
+
+    @Value("\${myapp.property}")
+    private lateinit var myProperty:String
     @CrossOrigin("*")
     @GetMapping("/")
     fun getData(@PathVariable collection: String): List<Document>{
@@ -27,7 +30,7 @@ class DataController(val mongoTemplate: MongoTemplate,@Value("\${myapp.property}
             val token = request.getHeader("Authorization")?.replace("Bearer ", "")
             val interceptor = JwtInterceptor(myProperty)
             val username = interceptor.tokenToName(token)
-            val shopController = ShopController(mongoTemplate )
+            val shopController = ShopController(mongoTemplate)
             shopController.addItem(goodId,username,type)
         }
         val query = Document("id", goodId)
