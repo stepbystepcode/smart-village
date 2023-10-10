@@ -22,7 +22,7 @@ class DataController(val mongoTemplate: MongoTemplate) {
     @GetMapping("/{goodId}")
     fun getOne(
         @PathVariable collection: String,
-        @PathVariable goodId: Long,
+        @PathVariable goodId: Number,
         @RequestParam(required = false, defaultValue = "history") type: String,
         request: HttpServletRequest
     ): List<Document> {
@@ -31,7 +31,7 @@ class DataController(val mongoTemplate: MongoTemplate) {
             val interceptor = JwtInterceptor(myProperty)
             val username = interceptor.tokenToName(token)
             val shopController = ShopController(mongoTemplate)
-            shopController.addItem(goodId,username,type)
+            shopController.addItem(goodId.toLong(),username,type)
         }
         val query = Document("id", goodId)
         return mongoTemplate.getCollection(collection).find(query).toList()
